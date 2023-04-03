@@ -3,7 +3,7 @@
 dotfiles:
 
 - kitty.conf
-- setup.scd
+- startup.scd
 - init.vim
 - init.lua
 - ...
