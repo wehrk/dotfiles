@@ -8,7 +8,7 @@ dotfiles:
 - init.lua
 - ...
 
-hierarchy:
+hierarchy ↴
 
 - kitty (terminal)
 - nvim (ide)
@@ -18,7 +18,7 @@ hierarchy:
 - vim-cmp (auto-completion)
 
 keymaps: 
-
+	
 	shift + return = run line 
 	opt + return = run selection/block of code 
 	opt + . = sclang hard stop 
