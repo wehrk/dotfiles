@@ -8,7 +8,8 @@ dotfiles:
 - init.lua
 - ...
 
-hierarchy ↴
+hierarchy 
+	↴
 
 - kitty (terminal)
 - nvim (ide)
