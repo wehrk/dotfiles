@@ -16,6 +16,7 @@ hierarchy ↓
 - lualine (status polling)
 - luasnip (snippets)
 - vim-cmp (auto-completion)
+- ...
 
 keymaps: 
 
