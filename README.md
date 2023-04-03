@@ -1,8 +1,8 @@
 # kitty-nvim-scnvim
 dotfiles
 
-- kitty 
-	- nvim
+- kitty (terminal)
+	- nvim (ide)
 	- scnvim (sc frontend)
 		- lualine (status polling)
 		- luasnip (snippets)
