@@ -1,7 +1,7 @@
 # kitty-nvim-scnvim
 dotfiles
 
-chain:
+chain: 
 
 - kitty 
 	+ nvim
