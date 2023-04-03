@@ -1,11 +1,14 @@
 # kitty-nvim-scnvim
 
 dotfiles:
+
 - kitty.conf
 - setup.scd
 - init.vim
 - init.lua
 - ...
+
+hierarchy:
 
 - kitty (terminal)
 	- nvim (ide)
