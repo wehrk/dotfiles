@@ -152,56 +152,74 @@ require('noirbuddy').setup({
 		  -- `noir_5` is light for *, /, =, tanh etc
 		  noir_5 = '#d3d3d3',
 		  -- `noir_6` is light for some elements in nvim intro
-		  noir_6 = '#ff0000',
+		  noir_6 = '#d3d3d3',
 		  -- idk 
 		  noir_7 = '#d3d3d3',
 		  -- `noir_8` is light for numbers, line numbers, ~ and post window divider
 		  noir_8 = '#d3d3d3',
 		  -- `noir_9` is dark for dark themes, and light for light themes
 		  --  (also for post window divider line)
-		  noir_9 = '#000000',
-    }
+		  noir_9 = '#000000'
+	  }
 })
 
 ---
 -- lualine.nvim (statusline)
 ---
-vim.opt.showmode = false
-require('lualine').setup({
-  options = {
-    icons_enabled = false,
-    theme = 'monochrome',
-    component_separators = '|',
-    section_separators = '',
-  },
-})
 
--- noirbuddy lualine
+-- polling sc status 
 
-local status_ok_lualine, lualine = pcall(require, "lualine")
+local function scstatus()
+	if vim.bo.filetype == "supercollider" then
+		stat = vim.fn["scnvim#statusline#server_status"]()
+		stat = stat:gsub("%%", "☍")
+		return stat
+	else
+		return ""
+	end
+end
 
-if not status_ok_lualine then
+local status_ok_colors, colors = pcall(require, "noirbuddy.colors")
+
+if not status_ok_colors then
     return
 end
 
-local noirbuddy_lualine = require("noirbuddy.plugins.lualine")
+local c = colors.all()
 
-local theme = noirbuddy_lualine.theme
--- optional, you can define those yourself if you need
--- local sections = noirbuddy_lualine.sections
+local theme = {
+    normal = {
+        a = { fg = c.gray_2, bg = c.gray_8, gui = "bold" },
+        b = { fg = c.gray_3, bg = c.gray_9 },
+        c = { fg = c.gray_3, bg = c.gray_8 },
+    },
+    insert = { a = { fg = c.black, bg = c.gray_2, gui = "bold" } },
+    visual = { a = { fg = c.black, bg = c.primary, gui = "bold" } },
+    replace = { a = { fg = c.black, bg = c.gray_1, gui = "bold" } },
+    inactive = {
+        a = { fg = c.gray_1, bg = c.black },
+        b = { fg = c.gray_1, bg = c.black },
+        c = { fg = c.gray_1, bg = c.black },
+    },
+}
+
 local sections = { 
 	lualine_a = {'mode'},
   	lualine_b = {},
   	lualine_c = {'filename'},
-  	lualine_x = {},
+  	lualine_x = {scstatus},
   	lualine_y = {},
   	lualine_z = {}
 }
+
+local noirbuddy_lualine = require("noirbuddy.plugins.lualine")
+
 local inactive_sections = noirbuddy_lualine.inactive_sections
 
-lualine.setup {
+
+require('lualine').setup {
     options = {
-        icons_enabled = true,
+        icons_enabled = false,
         theme = theme,
         filetype = { colored = false },
         component_separators = { left = "", right = "" },
@@ -210,7 +228,7 @@ lualine.setup {
         always_divide_middle = true,
     },
     sections = sections,
-    inactive_sections = inactive_sections,
+    inactive_sections = inactive_sections
 }
 
 ---
@@ -228,15 +246,15 @@ scnvim.setup {
   },
   keymaps = {
     ['<S-CR>'] = map('editor.send_line', {'i', 'n'}),
-    ['<C-e>'] = {
+    ['<A-CR>'] = {
       map('editor.send_block', {'i', 'n'}),
-      map('editor.send_selection', 'x'),
+      map('editor.send_selection', 'i', 'n'),
     },
     ['<CR>'] = map('postwin.toggle'),
-    ['<M-CR>'] = map('postwin.toggle', 'i'),
+    -- ['<CR>'] = map('postwin.toggle', 'i'),
     ['<M-L>'] = map('postwin.clear', {'n', 'i'}),
     ['<C-k>'] = map('signature.show', {'n', 'i'}),
-    ['<F12>'] = map('sclang.hard_stop', {'n', 'x', 'i'}),
+    ['<A-.>'] = map('sclang.hard_stop', {'n', 'x', 'i'}),
     ['<leader>st'] = map('sclang.start'),
     ['<leader>sk'] = map('sclang.recompile'),
     ['<F1>'] = map_expr('s.boot'),
@@ -252,13 +270,13 @@ scnvim.setup {
     highlight = false,
     auto_toggle_error = true,
     scrollback = 5000,
-    horizontal = false,
+    horizontal = true,
     direction = 'right',
     size = nil,
     fixed_size = nil,
     keymaps = nil,
     float = {
-      enabled = false,
+      enabled = true,
       row = 0,
       col = function()
         return vim.o.columns
