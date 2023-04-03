@@ -1,5 +1,11 @@
 # kitty-nvim-scnvim
-dotfiles
+
+dotfiles:
+- kitty.conf
+- setup.scd
+- init.vim
+- init.lua
+- ...
 
 - kitty (terminal)
 	- nvim (ide)
