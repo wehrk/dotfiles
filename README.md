@@ -1,14 +1,12 @@
 # kitty-nvim-scnvim
 dotfiles
 
-chain: 
-
 - kitty 
-	+ nvim
-	+ scnvim (sc frontend)
-		+ lualine (status polling)
-		+ luasnip (snippets)
-		+ vim-cmp (auto-completion)
+	- nvim
+	- scnvim (sc frontend)
+		- lualine (status polling)
+		- luasnip (snippets)
+			- vim-cmp (auto-completion)
 
 keymaps: 
 
