@@ -4,37 +4,37 @@ print('((╬◣﹏◢))')
 -- ==                           EDITOR SETTINGS                            == --
 -- ========================================================================== --
 
-vim.opt.number = false
-vim.opt.mouse = 'a'
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.hlsearch = false
-vim.opt.wrap = true
-vim.opt.breakindent = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = false
+vim.opt.number = false -- show line numbers (x)
+vim.opt.mouse = 'a' -- allow mouse
+vim.opt.ignorecase = true -- ignore case 
+vim.opt.smartcase = true -- INCLUDE will be treated the same as include
+vim.opt.hlsearch = false -- Highlight search matches (x)
+vim.opt.wrap = true -- wrap text 
+vim.opt.breakindent = true -- line is visually indented
+vim.opt.tabstop = 4 -- tabstop value
+vim.opt.shiftwidth = 4 -- amount of spaces for a deeper level
+vim.opt.expandtab = false -- expand tab to convert new tabs to spaces (x)
 
 -- ========================================================================== --
 -- ==                             KEYBINDINGS                              == --
 -- ========================================================================== --
 
--- Space as leader key
+-- space as leader key
 vim.g.mapleader = ' '
 
--- Shortcuts
+-- shortcuts
 vim.keymap.set({'n', 'x', 'o'}, '<leader>h', '^')
 vim.keymap.set({'n', 'x', 'o'}, '<leader>l', 'g_')
 vim.keymap.set('n', '<leader>a', ':keepjumps normal! ggVG<cr>')
 
--- Basic clipboard interaction
+-- basic clipboard interaction
 vim.keymap.set({'n', 'x'}, 'cp', '"+y')
 vim.keymap.set({'n', 'x'}, 'cv', '"+p')
 
--- Delete text
+-- delete text
 vim.keymap.set({'n', 'x'}, 'x', '"_x')
 
--- Commands
+-- mapping commands
 vim.keymap.set('n', '<leader>w', '<cmd>write<cr>')
 vim.keymap.set('n', '<leader>bq', '<cmd>bdelete<cr>')
 vim.keymap.set('n', '<leader>bl', '<cmd>buffer #<cr>')
@@ -113,8 +113,14 @@ lazy.setup({
   {'nvim-lualine/lualine.nvim'},
   {'davidgranstrom/scnvim'},
   {'kdheepak/monochrome.nvim'},
+  {'windwp/nvim-autopairs'},
   {'jesseleite/nvim-noirbuddy'},
-  {'tjdevries/colorbuddy.nvim', branch = 'dev' }
+  {'tjdevries/colorbuddy.nvim', branch = 'dev' },
+  {'onsails/lspkind.nvim'},
+  {'L3MON4D3/LuaSnip'}, -- luasnip snippets
+  {'hrsh7th/nvim-cmp'}, -- completion engine
+  {'quangnguyen30192/cmp-nvim-tags'}, -- completion source for tags
+  {'saadparwaiz1/cmp_luasnip'} -- completion source for luasnip snippets
 })
 
 -- ========================================================================== --
@@ -122,44 +128,58 @@ lazy.setup({
 -- ========================================================================== --
 
 ---
--- Colorscheme
+-- nvim-autopairs
+---
+
+local status_ok, npairs = pcall(require, 'nvim-autopairs')
+if not status_ok then
+	return
+end
+
+---
+-- colorscheme
 ---
 vim.opt.termguicolors = true
 vim.cmd.colorscheme('monochrome')
+vim.cmd 'set termguicolors'
 
 ---
 -- noirbuddy
----
+--
+
+local color1 = '#000000' -- '#000000'
+local color2 = '#d4d5da' -- '#d3d3d3'
 
 require('noirbuddy').setup({
 	  colors = {
 		  -- `primary` is for numbers 
-		  primary = '#d3d3d3',
-		  -- `primary` is for var sign
-		  secondary = '#d3d3d3',
+		  primary = color2,
+		  -- `secondary` is for var sign
+		  secondary = color2,
 		  -- `background` is for bg
-		  background = '#000000',
+		  background = color1,
 		  -- `noir_0` is light for dark themes, and dark for light themes
-		  noir_0 = '#d3d3d3',
+		  noir_0 = color2,
 		  --  `noir_1` is light for curl {} brackets, ugen methods (only .kr, .ar)
-		  noir_1 = '#d3d3d3',
+		  noir_1 = color2,
 		  -- idk
-		  noir_2 = '#d3d3d3',
+		  noir_2 = color2,
 		  -- idk
-		  noir_3 = '#d3d3d3',
+		  noir_3 = color2,
 		  -- `noir_4` is light for variables, class methods
-		  noir_4 = '#d3d3d3',
+		  noir_4 = color2,
 		  -- `noir_5` is light for *, /, =, tanh etc
-		  noir_5 = '#d3d3d3',
+		  noir_5 = color2,
 		  -- `noir_6` is light for some elements in nvim intro
-		  noir_6 = '#d3d3d3',
+		  noir_6 = color2,
 		  -- idk 
-		  noir_7 = '#d3d3d3',
+		  noir_7 = color2,
 		  -- `noir_8` is light for numbers, line numbers, ~ and post window divider
-		  noir_8 = '#d3d3d3',
+		  -- selection
+		  noir_8 = color2,
 		  -- `noir_9` is dark for dark themes, and light for light themes
 		  --  (also for post window divider line)
-		  noir_9 = '#000000'
+		  noir_9 = color1
 	  }
 })
 
@@ -167,7 +187,7 @@ require('noirbuddy').setup({
 -- lualine.nvim (statusline)
 ---
 
--- polling sc status 
+-- polling scsynth status 
 
 local function scstatus()
 	if vim.bo.filetype == "supercollider" then
@@ -180,7 +200,6 @@ local function scstatus()
 end
 
 local status_ok_colors, colors = pcall(require, "noirbuddy.colors")
-
 if not status_ok_colors then
     return
 end
@@ -189,12 +208,12 @@ local c = colors.all()
 
 local theme = {
     normal = {
-        a = { fg = c.gray_2, bg = c.gray_8, gui = "bold" },
+        a = { fg = c.gray_3, bg = c.gray_8, gui = "bold" },
         b = { fg = c.gray_3, bg = c.gray_9 },
         c = { fg = c.gray_3, bg = c.gray_8 },
     },
     insert = { a = { fg = c.black, bg = c.gray_2, gui = "bold" } },
-    visual = { a = { fg = c.black, bg = c.primary, gui = "bold" } },
+    visual = { a = { fg = c.black, bg = c.gray_2, gui = "bold" } },
     replace = { a = { fg = c.black, bg = c.gray_1, gui = "bold" } },
     inactive = {
         a = { fg = c.gray_1, bg = c.black },
@@ -216,7 +235,6 @@ local noirbuddy_lualine = require("noirbuddy.plugins.lualine")
 
 local inactive_sections = noirbuddy_lualine.inactive_sections
 
-
 require('lualine').setup {
     options = {
         icons_enabled = false,
@@ -232,6 +250,66 @@ require('lualine').setup {
 }
 
 ---
+-- luasnip
+---
+
+vim.g.scnvim_snippet_format = 'luasnip'
+require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())
+
+---
+-- cmp 
+---
+
+local cmp = require'cmp'
+
+local next_item = function(fallback)
+  if cmp.visible() then
+    cmp.select_next_item()
+  elseif has_words_before() then
+    cmp.complete()
+  else
+    fallback()
+  end
+end
+
+local prev_item = function(fallback)
+  if cmp.visible() then
+    cmp.select_prev_item()
+  else
+    fallback()
+  end
+end
+
+cmp.setup({
+	snippet = {
+		expand = function(args)
+		require('luasnip').lsp_expand(args.body) -- for `luasnip` users.
+		-- vim.fn["UltiSnips#Anon"](args.body) -- for `ultisnips` users.
+		end,
+		},
+	sources = {
+		{ name = 'tags', max_item_count = 3 },
+		-- { name = 'luasnip', max_item_count = 2 }, -- for luasnip users
+		{ name = "buffer",  max_item_count = 1 }, -- text within current buffer
+  		{ name = "path",  max_item_count = 1 }
+	},
+	mapping = cmp.mapping.preset.insert({
+   	 	['<A-Tab>'] = cmp.mapping.confirm({ select = true }),
+		['<Tab>'] = cmp.mapping(next_item, { 'i', 's' }),
+		['<S-Tab>'] = cmp.mapping(prev_item , { 'i', 's' }),
+      		['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    	}),
+	view = {
+		entries = { name = 'custom', separator = '|', selection_order = 'near_cursor' }
+	},
+	window = {
+		completion = cmp.config.window.bordered({
+			border = 'single',
+		})
+	}
+})
+
+---
 -- scnvim
 ---
 
@@ -245,20 +323,21 @@ scnvim.setup {
     args = {},
   },
   keymaps = {
-    ['<S-CR>'] = map('editor.send_line', {'i', 'n'}),
-    ['<A-CR>'] = {
-      map('editor.send_block', {'i', 'n'}),
-      map('editor.send_selection', 'i', 'n'),
+    ['<A-e>'] = map('editor.send_line', {'i', 'n', 'x'}),
+    ['<A-w>'] = {
+      map('editor.send_block', {'i', 'n', 'x'}),
+      map('editor.send_selection', 'i', 'n', 'x'),
     },
     ['<CR>'] = map('postwin.toggle'),
-    -- ['<CR>'] = map('postwin.toggle', 'i'),
     ['<M-L>'] = map('postwin.clear', {'n', 'i'}),
     ['<C-k>'] = map('signature.show', {'n', 'i'}),
-    ['<A-.>'] = map('sclang.hard_stop', {'n', 'x', 'i'}),
+    ['<A-q>'] = map('sclang.hard_stop', {'n', 'x', 'i'}),
     ['<leader>st'] = map('sclang.start'),
     ['<leader>sk'] = map('sclang.recompile'),
-    ['<F1>'] = map_expr('s.boot'),
+    ['<F1>'] = map_expr('Nth.fast()'),
     ['<F2>'] = map_expr('s.meter'),
+    ['<F3>'] = map_expr('s.scope'),
+    ['<F4>'] = map_expr('s.freqscope')
   },
   documentation = {
     cmd = nil,
@@ -281,7 +360,7 @@ scnvim.setup {
       col = function()
         return vim.o.columns
       end,
-      width = 64,
+      width = 48,
       height = 14,
       config = {
         border = 'single',
