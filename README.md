@@ -1,5 +1,3 @@
-# kitty-nvim-scnvim
-
 dotfiles:
 
 - kitty.conf
@@ -18,7 +16,7 @@ hierarchy ↓
 - vim-cmp (auto-completion)
 - ...
 
-keymaps: 
+scnvim keymaps: 
 
 ```
 shift + return = run line
