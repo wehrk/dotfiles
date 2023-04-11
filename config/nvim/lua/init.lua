@@ -14,6 +14,7 @@ vim.opt.breakindent = true -- line is visually indented
 vim.opt.tabstop = 4 -- tabstop value
 vim.opt.shiftwidth = 4 -- amount of spaces for a deeper level
 vim.opt.expandtab = false -- expand tab to convert new tabs to spaces (x)
+vim.wo.fillchars = 'eob: ' -- backslash whitespace
 
 -- ========================================================================== --
 -- ==                             KEYBINDINGS                              == --
@@ -50,6 +51,14 @@ local group = vim.api.nvim_create_augroup('user_cmds', {clear = true})
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   	desc = 'Highlight on yank',
+ 	group = group,
+ 	callback = function()
+		vim.wo.fillchars = 'eob: '
+	end,
+})
+
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  	desc = '',
  	group = group,
  	callback = function()
 		vim.highlight.on_yank({higroup = 'Visual', timeout = 200})
@@ -109,7 +118,7 @@ lazy.opts = {}
 
 lazy.setup({
   {'folke/tokyonight.nvim'},
-  {'kyazdani42/nvim-web-devicons'},
+  {'nvim-tree/nvim-web-devicons'},
   {'nvim-lualine/lualine.nvim'},
   {'davidgranstrom/scnvim'},
   {'kdheepak/monochrome.nvim'},
@@ -120,7 +129,9 @@ lazy.setup({
   {'L3MON4D3/LuaSnip'}, -- luasnip snippets
   {'hrsh7th/nvim-cmp'}, -- completion engine
   {'quangnguyen30192/cmp-nvim-tags'}, -- completion source for tags
-  {'saadparwaiz1/cmp_luasnip'} -- completion source for luasnip snippets
+  {'saadparwaiz1/cmp_luasnip'}, -- completion source for luasnip snippets
+  {'nvim-tree/nvim-tree.lua', version = "*"},
+  {'folke/which-key.nvim'}
 })
 
 -- ========================================================================== --
@@ -182,6 +193,53 @@ require('noirbuddy').setup({
 		  noir_9 = color1
 	  }
 })
+
+---
+-- nvim-web-devicons
+---
+
+require'nvim-web-devicons'.setup {
+ -- your personnal icons can go here (to override)
+ -- you can specify color or cterm_color instead of specifying both of them
+ -- DevIcon will be appended to `name`
+ override = {
+  zsh = {
+    icon = "",
+    color = "#428850",
+    cterm_color = "65",
+    name = "Zsh"
+  }
+ };
+ -- globally enable different highlight colors per icon (default to true)
+ -- if set to false all icons will have the default icon's color
+ color_icons = true;
+ -- globally enable default icons (default to false)
+ -- will get overriden by `get_icons` option
+ default = true;
+ -- globally enable "strict" selection of icons - icon will be looked up in
+ -- different tables, first by filename, and if not found by extension; this
+ -- prevents cases when file doesn't have any extension but still gets some icon
+ -- because its name happened to match some extension (default to false)
+ strict = true;
+ -- same as `override` but specifically for overrides by filename
+ -- takes effect when `strict` is true
+ override_by_filename = {
+  [".gitignore"] = {
+    icon = "",
+    color = "#f1502f",
+    name = "Gitignore"
+  }
+ };
+ -- same as `override` but specifically for overrides by extension
+ -- takes effect when `strict` is true
+ override_by_extension = {
+  ["log"] = {
+    icon = "",
+    color = "#81e043",
+    name = "Log"
+  }
+ };
+}
 
 ---
 -- lualine.nvim (statusline)
@@ -310,6 +368,54 @@ cmp.setup({
 })
 
 ---
+-- nvim-tree
+---
+
+-- disable netrw at the very start of your init.lua (strongly advised)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- OR setup with some options
+require("nvim-tree").setup({
+	view = { 
+		number = false,
+		relativenumber = false,
+		float = {
+			enable = true,
+			quit_on_focus_loss = true,
+			open_win_config = {
+				relative = "editor",
+				border = "rounded",
+				width = 30,
+				height = 30,
+				row = 1,
+				col = 1,
+			}
+		}
+	},
+	filters = {
+        	dotfiles = true,
+        	git_clean = false,
+        	no_buffer = false,
+        	custom = {},
+        	exclude = {},
+	}
+})
+
+---
+-- which-key
+---
+
+local status_ok_colors, wk = pcall(require, 'which-key')
+if not status_ok_colors then
+    return
+end
+
+wk.register({
+	['<A-b>'] = { '<cmd>NvimTreeToggle<cr>', 'Explorer' } -- <A-b> :NvimTreeToggle
+})
+
+---
 -- scnvim
 ---
 
@@ -363,7 +469,7 @@ scnvim.setup {
       width = 48,
       height = 14,
       config = {
-        border = 'single',
+        border = "rounded"
       },
       callback = function(id)
         vim.api.nvim_win_set_option(id, 'winblend', 10)
