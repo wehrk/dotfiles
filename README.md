@@ -1,10 +1,3 @@
-dotfiles ↓
-
-- kitty.conf
-- startup.scd
-- init.vim
-- init.lua
-
 ```
 <A-e> - run line
 <A-w> - run selection/block of code 
