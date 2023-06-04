@@ -527,7 +527,7 @@ require 'sc-scratchpad'.setup({
 	},
 	border = 'rounded', -- "double", "none", "rounded", "shadow", "single" or "solid"
 	position = "50%",
-	width = "50%",
+	width = "80%",
 	height = "50%",
 	firstline = "",
 	open_insertmode = true, -- Open scratchpad buffer in insertmode
