@@ -1,22 +1,9 @@
-dotfiles:
+dotfiles ↓
 
 - kitty.conf
 - startup.scd
 - init.vim
 - init.lua
-- ...
-
-hierarchy ↓
-
-- kitty (terminal)
-- nvim (ide)
-- scnvim (sc frontend)
-- lualine (status polling)
-- luasnip (snippets)
-- vim-cmp (auto-completion)
-- ...
-
-scnvim keymaps: 
 
 ```
 <A-e> - run line
