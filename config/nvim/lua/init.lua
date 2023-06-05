@@ -9,8 +9,9 @@ vim.opt.mouse = 'a' -- allow mouse
 vim.opt.ignorecase = true -- ignore case 
 vim.opt.smartcase = true -- INCLUDE will be treated the same as include
 vim.opt.hlsearch = false -- Highlight search matches (x)
-vim.opt.wrap = true -- wrap text 
-vim.opt.breakindent = true -- line is visually indented
+vim.opt.wrap = true -- wrap text
+vim.opt.linebreak = true -- lines wrap at words rather than random character
+vim.opt.textwidth = 80 -- text will be n character wide
 vim.opt.tabstop = 4 -- tabstop value
 vim.opt.shiftwidth = 4 -- amount of spaces for a deeper level
 vim.opt.expandtab = false -- expand tab to convert new tabs to spaces (x)
@@ -356,7 +357,7 @@ cmp.setup({
 	},
 	mapping = cmp.mapping.preset.insert({
    	 	['<A-Tab>'] = cmp.mapping.confirm({ select = true }),
-		['<Tab>'] = cmp.mapping(next_item, { 'i', 's' }),
+		-- ['<Tab>'] = cmp.mapping(next_item, { 'i', 's' }),
 		['<S-Tab>'] = cmp.mapping(prev_item , { 'i', 's' }),
       		['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     	}),
